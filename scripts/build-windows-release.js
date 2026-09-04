@@ -45,9 +45,33 @@ await fs.writeFile(path.join(releaseRoot, "README.txt"),
 
 const zipPath = `${releaseRoot}.zip`;
 await fs.rm(zipPath, { force: true });
-const escapedRelease = releaseRoot.replaceAll("'", "''");
-const escapedZip = zipPath.replaceAll("'", "''");
-const ps = spawnSync("powershell.exe", ["-NoProfile", "-Command", `Compress-Archive -Path '${escapedRelease}\\*' -DestinationPath '${escapedZip}' -Force`], { stdio: "inherit" });
-if (ps.status !== 0) process.exit(ps.status || 1);
+// Use Windows bsdtar instead of PowerShell Compress-Archive.
+// Compress-Archive can report file-lock errors without reliably propagating
+// a failing exit status to the parent process.
+const tar = spawnSync(
+  "tar.exe",
+  ["-a", "-c", "-f", zipPath, "-C", releaseRoot, "."],
+  { stdio: "inherit" }
+);
+
+if (tar.error) {
+  console.error(`ZIP-Erstellung konnte nicht gestartet werden: ${tar.error.message}`);
+  process.exit(1);
+}
+
+if (tar.status !== 0) {
+  console.error(`ZIP-Erstellung fehlgeschlagen (Exit-Code ${tar.status}).`);
+  process.exit(tar.status || 1);
+}
+
+try {
+  const zipStat = await fs.stat(zipPath);
+  if (!zipStat.isFile() || zipStat.size < 1024) {
+    throw new Error("ZIP-Datei fehlt oder ist unplausibel klein.");
+  }
+} catch (err) {
+  console.error(`ZIP-Prüfung fehlgeschlagen: ${err.message}`);
+  process.exit(1);
+}
 console.log(`Windows release created: ${releaseRoot}`);
 console.log(`Windows ZIP created: ${zipPath}`);
