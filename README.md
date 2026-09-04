@@ -10,6 +10,26 @@ SLM unterstützt dabei insbesondere **Bitcoin-orientierte Buy-Borrow-Die-Strateg
 
 Das Modell ist jedoch **nicht auf Bitcoin beschränkt**. Die drei Töpfe können frei mit beliebigen in Parqet geführten Vermögenswerten belegt werden.
 
+## Vorschau
+
+![Strategic Liquidity Manager – Demo Dashboard](docs/screenshots/slm-dashboard-demo.png)
+
+*Strategische Übersicht eines vollständig fiktiven Demo-Portfolios.*
+
+## Download
+
+**Aktuelle Version: v1.4.1**
+
+Fertige Distributionen stehen für **Windows x64** und **Linux x64** zur Verfügung:
+
+- Windows x64 – ZIP
+- Linux x64 – DEB
+- Linux x64 – TAR.GZ
+
+**[Aktuellen Release herunterladen](https://github.com/LIFESHIFTX/strategic-liquidity-manager/releases/latest)**
+
+SHA-256-Prüfsummen werden mit jedem Release als `SHA256SUMS.txt` bereitgestellt.
+
 ## Das Drei-Töpfe-Modell
 
 SLM ordnet bestehende Parqet-Positionen drei frei definierbaren Funktionen zu:
@@ -55,6 +75,13 @@ So wird aus einer reinen Vermögensübersicht ein strategisches Liquiditätsmode
 - lokale Datenspeicherung ohne eigenen SLM-Cloud-Dienst
 - kontrolliertes Beenden der Anwendung
 - Distribution für Windows x64 und Linux x64
+
+
+### Bitcoin-besicherte Kredite und Kreditliquidität
+
+![Bitcoin-besicherte Kredite und Kreditliquidität](docs/screenshots/slm-credits-demo.png)
+
+*Planung eines fiktiven Firefish-Kredits zusammen mit einer klassischen Kreditlinie.*
 
 ## Datenschutz und Sicherheitsmodell
 
@@ -120,6 +147,17 @@ Nach der Installation:
 8. Optional Futures, Kreditlinien oder manuelle Kredite ergänzen.
 9. Optional Firefish verbinden bzw. den automatischen Import Bitcoin-besicherter Firefish-Kredite konfigurieren.
 
+
+### Konfiguration und Verwaltung
+
+![SLM – Profile, Zielmodell und Grundeinstellungen](docs/screenshots/slm-management-demo-1.png)
+
+*Profile, Zielmodell, Firefish-Grundparameter, Datensicherung und Anwendungssteuerung.*
+
+![SLM – Positionszuordnung, Futures und Kredite](docs/screenshots/slm-management-demo-2.png)
+
+*Zuordnung von Parqet-Positionen sowie lokale Verwaltung von Futures und Krediten.*
+
 ## Backup und Restore
 
 Über den Verwaltungsbereich kann die lokale SLM-Konfiguration als JSON-Datei exportiert und später wiederhergestellt werden.
@@ -143,18 +181,6 @@ Zum vollständigen Beenden:
 **Verwaltung → Anwendung beenden**
 
 Der Server wird kontrolliert beendet. Ein Neustart oder Reboot des Rechners ist nicht erforderlich.
-
-## Downloads
-
-Die jeweils aktuelle stabile Version wird unter **GitHub Releases** veröffentlicht.
-
-Für Version 1.4.1 sind vorgesehen:
-
-```text
-parqet-strategic-liquidity-manager-1.4.1-windows-x64.zip
-parqet-strategic-liquidity-manager_1.4.1_amd64.deb
-parqet-strategic-liquidity-manager-1.4.1-linux-x64.tar.gz
-```
 
 ## Entwicklung aus dem Quellcode
 
