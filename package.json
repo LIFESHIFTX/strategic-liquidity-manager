@@ -1,0 +1,21 @@
+{
+  "name": "parqet-risk-pots",
+  "version": "1.4.1",
+  "private": true,
+  "type": "module",
+  "description": "Strategic liquidity and credit management for Parqet, including Bitcoin Buy-Borrow-Die planning.",
+  "scripts": {
+    "start": "node --env-file=.env server.js",
+    "dev": "node --env-file=.env --watch server.js",
+    "check": "node --check server.js && node --check public/app.js",
+    "build:release-config": "node scripts/build-release-config.js",
+    "build:linux": "node scripts/build-linux-release.js",
+    "build:windows": "node scripts/build-windows-release.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

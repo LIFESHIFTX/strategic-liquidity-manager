@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strategic Liquidity Manager for Parqet</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header id="appHeader" class="topbar">
+    <div>
+      <h1>Strategic Liquidity Manager for Parqet</h1>
+      <p>Strategisches Liquiditäts- und Kreditmanagement<br>unterstützt Bitcoin Buy-Borrow-Die Strategie</p>
+    </div>
+    <div class="actions">
+      <div class="profile-switcher">
+        <span>Profil</span>
+        <select id="profileSelect" aria-label="Aktives Profil"></select>
+      </div>
+      <button id="refreshBtn" class="secondary">Aktualisieren</button>
+      <div class="parqet-connection-actions">
+        <span id="parqetConnectionStatus" class="connection-status disconnected">
+          <span class="connection-dot" aria-hidden="true"></span>
+          <span id="parqetConnectionStatusText">Parqet getrennt</span>
+        </span>
+        <button id="connectBtn">Mit Parqet verbinden</button>
+        <button id="disconnectBtn" class="secondary hidden" type="button">Verbindung trennen</button>
+      </div>
+    </div>
+  </header>
+
+  <section id="firstRunWelcome" class="first-run hidden">
+    <div class="first-run-card">
+      <span class="eyebrow">Ersteinrichtung</span>
+      <h2>Willkommen beim Strategic Liquidity Manager for Parqet</h2>
+
+      <div class="first-run-steps">
+        <span id="setupStep1"><strong>1</strong> Parqet verbinden</span>
+        <span id="setupStep2"><strong>2</strong> Portfolios auswählen</span>
+        <span id="setupStep3"><strong>3</strong> Profil „Default“ einrichten</span>
+      </div>
+
+      <div id="firstRunConnectStage">
+        <p>Für die Ersteinrichtung wird die Anwendung zunächst read-only mit Parqet verbunden.</p>
+        <button id="firstRunConnectBtn" type="button">Connect with Parqet</button>
+      </div>
+
+      <div id="firstRunPortfolioStage" class="hidden">
+        <p>Parqet ist verbunden. Wähle jetzt die Portfolios aus, die im Profil „Default“ gemeinsam ausgewertet werden sollen.</p>
+        <div id="firstRunPortfolioChoices" class="portfolio-choices compact"></div>
+        <div class="row first-run-actions">
+          <button id="completeFirstRunBtn" type="button">Einrichtung abschließen</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main id="appMain" class="wrap">
+    <section id="notice" class="notice hidden"></section>
+
+
+    <section id="portfolioPicker" class="panel hidden">
+      <h2>Parqet-Portfolios auswählen</h2>
+      <p class="hint">Alle ausgewählten Portfolios werden im Profil gemeinsam aggregiert.</p>
+      <div id="portfolioChoices" class="portfolio-choices"></div>
+      <button id="selectPortfolioBtn">Auswahl übernehmen</button>
+    </section>
+
+    <section class="dashboard-overview" aria-label="Gesamtübersicht">
+      <div class="overview-head">
+        <div>
+          <span class="eyebrow">Dashboard</span>
+          <h2>Strategische Übersicht</h2>
+        </div>
+        <div class="overview-total">
+          <span>Zugeordnetes Vermögen</span>
+          <strong id="assignedAssets">–</strong>
+        </div>
+      </div>
+      <div class="allocation-bar" aria-label="Verteilung Topf 1 bis 3">
+        <span id="allocation1"></span><span id="allocation2"></span><span id="allocation3"></span>
+      </div>
+      <div id="dataFreshness" class="data-freshness">Datenstand · Parqet – · ECB –</div>
+      <div class="overview-metrics">
+        <div><span>Topf 1</span><strong id="share1">–</strong></div>
+        <div><span>Topf 2</span><strong id="share2">–</strong></div>
+        <div><span>Topf 3</span><strong id="share3">–</strong></div>
+        <div class="credit-metric"><span>Freie Kreditliquidität</span><strong id="freeCreditLiquidity">–</strong></div>
+      </div>
+    </section>
+
+    <section class="grid pots">
+      <article class="pot pot-1">
+        <div class="pot-head">
+          <div><span class="tag">Topf 1</span><h2>Volatilität</h2></div>
+          <strong id="total1">–</strong>
+        </div>
+        <div id="targetModel1" class="target-model"></div>
+        <div class="pot-scroll">
+          <div id="bucket1" class="positions empty">Keine Positionen zugeordnet</div>
+          <div id="futureBlock"></div>
+        </div>
+      </article>
+
+      <article class="pot pot-2">
+        <div class="pot-head">
+          <div><span class="tag">Topf 2</span><h2>Stabilität</h2></div>
+          <strong id="total2">–</strong>
+        </div>
+        <div id="targetModel2" class="target-model"></div>
+        <div class="pot-scroll">
+          <div id="bucket2" class="positions empty">Keine Positionen zugeordnet</div>
+        </div>
+      </article>
+
+      <article class="pot pot-3">
+        <div class="pot-head">
+          <div><span class="tag">Topf 3</span><h2>Liquidität</h2></div>
+          <strong id="total3">–</strong>
+        </div>
+      <div id="targetModel3" class="target-model"></div>
+      <div class="pot-scroll">
+        <div id="bucket3" class="positions empty">Keine Positionen zugeordnet</div>
+      </div>
+      </article>
+
+      <article class="pot credit-pot">
+        <div class="pot-head">
+          <div><span class="tag">Topf 4</span><h2>Kreditliquidität</h2></div>
+          <strong id="creditUsed">–</strong>
+        </div>
+        <div id="creditSummary" class="mini-summary"></div>
+        <div id="credits" class="positions empty">Keine Kredite eingetragen</div>
+      </article>
+    </section>
+
+    <div class="management-toggle-row">
+      <button id="toggleManagementBtn" class="secondary" type="button" aria-expanded="false" aria-controls="managementArea">Verwaltung anzeigen ▼</button>
+    </div>
+
+    <div id="managementArea" class="hidden">
+    <div class="management-head">
+      <span class="eyebrow">Verwaltung</span>
+      <h2>Positionen und Parameter pflegen</h2>
+      <p>Die folgenden Bereiche verändern die lokale Risk-Pots-Zuordnung und manuell gepflegte Zusatzdaten.</p>
+    </div>
+
+    <section id="profileManager" class="panel profile-manager management-panel">
+      <div class="section-head">
+        <div><h2>Profile verwalten</h2><p>Jedes Profil besitzt eigene Zuordnungen, Futures, Kredite und Einstellungen. Die Parqet-Verbindung bleibt gemeinsam.</p></div>
+      </div>
+
+      <div class="profile-manager-block">
+        <h3>Neues Profil</h3>
+
+        <div class="profile-name-row">
+          <label for="newProfileName" class="profile-portfolio-label">Profilname</label>
+          <input id="newProfileName" placeholder="Profilname">
+        </div>
+
+        <div class="profile-new-portfolios">
+          <div class="profile-portfolio-label">Parqet-Portfolios</div>
+          <div id="newProfilePortfolioChoices" class="portfolio-choices compact"></div>
+        </div>
+
+        <div class="row profile-create-actions">
+          <button id="addProfileBtn" type="button">Profil anlegen</button>
+        </div>
+      </div>
+
+      <div class="profile-manager-block active-profile-block">
+        <h3>Aktives Profil: <span id="activeProfileName">–</span></h3>
+        <div class="row active-profile-actions">
+          <button id="renameProfileBtn" class="secondary" type="button">Umbenennen</button>
+          <button id="managePortfoliosBtn" class="secondary" type="button">Portfolios verwalten</button>
+          <button id="deleteProfileBtn" class="danger" type="button">Profil löschen</button>
+        </div>
+        <div class="linked-portfolios">
+          <span class="profile-portfolio-label">Verknüpfte Parqet-Portfolios</span>
+          <div id="linkedPortfolioNames" class="linked-portfolio-names">–</div>
+        </div>
+        <div id="managePortfoliosArea" class="add-portfolios-area hidden">
+          <div id="activeProfilePortfolioChoices" class="portfolio-choices compact"></div>
+          <button id="saveProfilePortfoliosBtn" type="button">Änderungen übernehmen</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel management-panel">
+      <div class="section-head">
+        <div><h2>Zielmodell Topf 2 / 3</h2><p>Topf 3 basiert auf Monatsbedarf × Dauer. Topf 2 verwendet ein Vielfaches dieses Topf-3-Sollwerts.</p></div>
+      </div>
+      <div class="row target-settings-row">
+        <label>Bedarf / Monat (€)
+          <input id="monthlyNeed" type="number" min="0.01" step="0.01" placeholder="5000">
+        </label>
+        <label>Dauer Topf 3 (Monate)
+          <input id="targetMonths" type="number" min="1" step="1" placeholder="24">
+        </label>
+        <label>Topf-2-Multiplikator (1,0–12,0×)
+          <input id="pot2Multiplier" type="number" min="1" max="12" step="0.1" placeholder="2">
+        </label>
+        <button id="saveTargetSettingsBtn" type="button">Zielmodell speichern</button>
+      </div>
+    </section>
+
+    <section class="panel management-panel">
+      <div class="section-head">
+        <div><h2>Firefish Grundparameter</h2><p>Die Kreditkapazität ergibt sich aus dem für Firefish vorgesehenen Anteil des zugewiesenen BTC-Bestands und dem gewünschten Ziel-LTV.</p></div>
+      </div>
+      <div class="row">
+        <label>Für Firefish verfügbarer BTC-Anteil (%)
+          <input id="firefishBorrowPercent" type="number" min="0" max="100" step="0.1" placeholder="100">
+        </label>
+        <label>Ziel-LTV (%) · max. 50 %
+          <input id="firefishTargetLtv" type="number" min="0" max="50" step="0.1" placeholder="30">
+        </label>
+        <button id="saveFirefishSettingsBtn">Parameter speichern</button>
+      </div>
+    </section>
+
+    <section class="panel management-panel">
+      <div class="section-head">
+        <div><h2>Datensicherung</h2><p>Lokale Risk-Pots-Konfiguration sichern oder wiederherstellen. OAuth-Tokens und Secrets werden nicht exportiert.</p></div>
+      </div>
+      <div class="row">
+        <button id="exportConfigBtn" type="button">Konfiguration exportieren</button>
+        <button id="importConfigBtn" class="secondary" type="button">Konfiguration importieren</button>
+        <input id="importConfigFile" class="hidden" type="file" accept="application/json,.json">
+      </div>
+    </section>
+
+    <section class="panel management-panel">
+      <div class="section-head">
+        <div><h2>Anwendung</h2><p>Beendet den lokalen Strategic-Liquidity-Manager-Server. Der Browser kann danach geschlossen werden.</p></div>
+      </div>
+      <div class="row">
+        <button id="shutdownAppBtn" class="danger" type="button">Anwendung beenden</button>
+      </div>
+    </section>
+
+    <section class="panel management-panel">
+      <div class="section-head">
+        <div><h2>Parqet-Positionen zuordnen</h2><p>Die Zuordnung wird nur lokal in dieser App gespeichert.</p></div>
+      </div>
+      <div id="holdingsTable" class="table-wrap holdings-assignment-scroll"></div>
+    </section>
+
+    <section class="grid forms management-forms">
+      <article class="panel">
+        <h2>Future hinzufügen</h2>
+        <p class="hint">Future zählt mit seinem aktuellen Eigenkapital automatisch zu Topf 1. Exposure wird separat gezeigt.</p>
+        <div class="form-grid">
+          <label>Name<input id="futureName" placeholder="z. B. BTC Long 3×"></label>
+          <label>Währung
+            <select id="futureCurrency">
+              <option value="EUR">EUR</option>
+              <option value="USD">USD</option>
+              <option value="USDT">USDT</option>
+            </select>
+          </label>
+          <label>Eigenkapital / Margin<input id="futureEquity" type="number" step="0.01" placeholder="5000"></label>
+          <label>Hebel ×<input id="futureLeverage" type="number" min="0" step="0.01" placeholder="3"></label>
+          <label>P&amp;L (Info)<input id="futurePnl" type="number" step="0.01" placeholder="0"></label>
+          <label class="wide">Notiz<input id="futureNote" placeholder="optional"></label>
+        </div>
+        <!--button id="addFutureBtn">Future speichern</button-->
+        <div class="row">
+          <button id="addFutureBtn">Future speichern</button>
+          <button id="cancelFutureEditBtn" class="secondary hidden">Abbrechen</button>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>Kredit hinzufügen</h2>
+        <p class="hint">Rahmenkredit oder Firefish; der aktive/genutzte Betrag kann manuell oder aus einem eigenen Parqet-Portfolio kommen.</p>
+        <div class="firefish-import">
+          <strong>Firefish CSV-Import</strong>
+          <div class="row">
+            <button id="importFirefishBtn" class="secondary" type="button">Firefish CSV importieren</button>
+            <input id="firefishCsvFile" class="hidden" type="file" accept=".csv,text/csv">
+          </div>
+          <small>Alle CSV-Kredite werden importiert; nur ACTIVE zählt zur Auslastung. „Ersetzen“ ersetzt ausschließlich frühere CSV-Importe.</small>
+        </div>
+        <div class="form-grid">
+          <label>Name<input id="creditName" placeholder="z. B. Firefish"></label>
+          <label>Typ
+            <select id="creditType">
+              <option value="revolving">Rahmenkredit</option>
+              <option value="firefish">Firefish</option>
+            </select>
+          </label>
+          <label id="creditSourceLabel">Datenquelle
+            <select id="creditSource">
+              <option value="manual">Manuell</option>
+              <option value="parqet">Parqet-Portfolio</option>
+            </select>
+          </label>
+          <label id="creditStatusLabel" class="hidden">Status
+            <select id="creditStatus">
+              <option value="PLANNED">PLANNED</option>
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="CLOSED">CLOSED</option>
+            </select>
+          </label>
+          <label id="creditCurrencyLabel" class="hidden">Währung
+            <select id="creditCurrency">
+              <option value="EUR">EUR</option>
+              <option value="USDT">USDT</option>
+              <option value="USD">USD</option>
+            </select>
+          </label>
+          <label id="creditStartDateLabel" class="hidden">Startdatum
+            <input id="creditStartDate" type="date">
+          </label>
+          <label id="creditMaturityDateLabel" class="hidden">Fälligkeit
+            <input id="creditMaturityDate" type="date">
+          </label>
+          <label id="creditPortfolioLabel" class="hidden">Parqet-Portfolio
+            <select id="creditPortfolioId"></select>
+          </label>
+          <label id="creditHoldingLabel" class="hidden">Parqet-Position
+            <select id="creditHoldingId"><option value="">Position auswählen</option></select>
+          </label>
+          <label id="creditAmountLabel">Genutzt
+            <input id="creditUsedInput" type="number" step="0.01" placeholder="30000">
+          </label>
+          <label id="creditLimitLabel">Limit
+            <input id="creditLimit" type="number" step="0.01" placeholder="50000">
+          </label>
+          <label>Zins % p.a.<input id="creditRate" type="number" step="0.01" placeholder="12.5"></label>
+          <label class="wide">Notiz<input id="creditNote" placeholder="optional"></label>
+        </div>
+        <div class="row">
+          <button id="addCreditBtn">Kredit speichern</button>
+          <button id="cancelCreditEditBtn" class="secondary hidden">Abbrechen</button>
+       </div>
+      </article>
+    </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="bitcoin-resources">
+      <span>Externe Bitcoin Ressourcen</span>
+      <a class="resource-link" href="https://bitcoinloansforever.com" target="_blank" rel="noopener noreferrer">Bitcoin Loans Forever ↗</a>
+      <a class="resource-link" href="https://dashboard.lets.bz/" target="_blank" rel="noopener noreferrer">Dashboard für Firefish ↗</a>
+      <a class="resource-link" href="https://satoshisquest.org" target="_blank" rel="noopener noreferrer">Satoshi's Quest ↗</a>
+    </div>
+    <div class="footer-meta">
+      <div class="footer-disclaimer">
+        <span><strong>Strategic Liquidity Manager · v1.4.1</strong></span>
+        <span>Parqet-Zugriff ausschließlich lesend · keine Orders · keine Änderungen am Parqet-Portfolio.</span>
+        <span>Planungsdaten und OAuth-Zugangsdaten werden lokal gespeichert. Keine Anlage- oder Kreditberatung.</span>
+      </div>
+      <a class="support-link" href="https://coinos.io/pay/paysats" target="_blank" rel="noopener noreferrer">Unterstützen ⚡</a>
+    </div>
+  </footer>
+  <script src="/app.js?v=1.4.1"></script>
+</body>
+</html>
