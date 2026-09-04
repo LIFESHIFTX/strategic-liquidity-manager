@@ -1,5 +1,7 @@
 # Strategic Liquidity Manager
 
+![Strategic Liquidity Manager for Parqet](docs/screenshots/slm-hero.png)
+
 **Strategische Liquiditätsplanung auf Basis deiner Parqet-Portfolios.**
 
 Strategic Liquidity Manager (SLM) ist eine lokale Open-Source-Anwendung, die Parqet um eine strategische Liquiditäts- und Risikoperspektive ergänzt. Statt nur den aktuellen Vermögenswert zu betrachten, beantwortet SLM vor allem eine praktische Frage:
