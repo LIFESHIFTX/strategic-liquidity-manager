@@ -1,5 +1,19 @@
 # Release Notes
 
+## v1.4.2
+
+### Bugfixes
+
+- verhindert veraltete Profildaten nach einem fehlgeschlagenen Profilwechsel
+- bei nicht freigegebenen Parqet-Portfolios bleiben lokale Planungsdaten sichtbar, während Parqet-Istdaten leer bleiben
+- verständlichere Hinweise bei fehlenden Portfolio-Berechtigungen
+- konsistentes Verhalten zwischen getrenntem Parqet-Zustand und 403-Berechtigungsfehlern
+
+### Dokumentation
+
+- Desktop-Plattformen explizit dokumentiert
+- Hinweis zum Reconnect nach vollständigem Parqet-Browser-Logout ergänzt
+
 ## v1.4.1
 
 **Release Candidate für die öffentliche Distribution**

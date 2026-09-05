@@ -20,13 +20,15 @@ Das Modell ist jedoch **nicht auf Bitcoin beschränkt**. Die drei Töpfe können
 
 ## Download
 
-**Aktuelle Version: v1.4.1**
+**Aktuelle Version: v1.4.2**
 
 Fertige Distributionen stehen für **Windows x64** und **Linux x64** zur Verfügung:
 
 - Windows x64 – ZIP
 - Linux x64 – DEB
 - Linux x64 – TAR.GZ
+
+**Plattformen:** SLM ist derzeit als lokale Desktop-Anwendung für Windows 10/11 x64 und Linux x64 ausgelegt. Eine native Smartphone-Version wird aktuell nicht angeboten.
 
 **[Aktuellen Release herunterladen](https://github.com/LIFESHIFTX/strategic-liquidity-manager/releases/latest)**
 
@@ -183,6 +185,12 @@ Zum vollständigen Beenden:
 **Verwaltung → Anwendung beenden**
 
 Der Server wird kontrolliert beendet. Ein Neustart oder Reboot des Rechners ist nicht erforderlich.
+
+## Troubleshooting: Parqet neu verbinden
+
+Wenn die Parqet-Autorisierung widerrufen wurde, kann SLM über **Mit Parqet verbinden** erneut autorisiert werden.
+
+Wurde zusätzlich die Parqet-Browsersitzung vollständig beendet, kann es vorkommen, dass Parqet nach der erneuten Anmeldung zunächst nur die Parqet-Startseite anzeigt. In diesem Fall SLM erneut aufrufen und **Mit Parqet verbinden** ein zweites Mal wählen. Danach sollte die Portfolio-Auswahl erscheinen.
 
 ## Entwicklung aus dem Quellcode
 
