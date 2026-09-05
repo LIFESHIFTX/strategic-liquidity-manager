@@ -415,11 +415,6 @@ function futureToEur(value, inputCurrency, fx) {
   return null;
 }
 
-//function creditAmount(value) {
-//  const n = Number(value);
-//  return Number.isFinite(n) ? Math.abs(n) : 0;
-//}
-
 app.get("/api/status", async (_req, res) => {
   const tokens = await getTokens();
   const store = await getProfileStore();
@@ -604,7 +599,7 @@ app.post("/api/select-portfolio", async (req, res) => {
   res.json({ ok: true });
 });
 
-app.get("/api/dashboard", async (_req, res, next) => {
+app.get("/api/dashboard", async (req, res, next) => {
   try {
     const state = await getState();
     const portfolioIds = Array.isArray(state.portfolioIds) && state.portfolioIds.length
@@ -621,8 +616,10 @@ app.get("/api/dashboard", async (_req, res, next) => {
       });
     }
 
+    const localOnly = req.query.local === "1";
+
     const tokens = await getTokens();
-    if (!tokens?.access_token) {
+    if (localOnly || !tokens?.access_token) {
       const futures = state.futures.map(f => {
         const inputCurrency = ["EUR", "USD", "USDT"].includes(f.currency) ? f.currency : "EUR";
         const leverage = safeNumber(f.leverage) > 0

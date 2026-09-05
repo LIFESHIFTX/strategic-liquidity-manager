@@ -109,19 +109,6 @@ function renderOverview() {
     $(`allocation${n}`).title = `Topf ${n}: ${num(share, 1)} %`;
   });
 }
-//function renderFutures() {
-//  const host = $("futureBlock");
-//  if (!dashboard.futures.length) { host.innerHTML = ""; return; }
-//  host.innerHTML = `<div class="future-box"><h3>Futures · Exposure ${money(dashboard.totals.futuresExposure)}</h3>` +
-//    dashboard.futures.map(f => `<div class="position">
-//      <div><strong>${escapeHtml(f.name)}</strong><br>
-//      <small>Eigenkapital ${money(f.equity)} · Exposure ${money(f.exposure)} · P&amp;L ${money(f.pnl)}</small></div>
-//      <button class="danger delete-future" data-id="${escapeHtml(f.id)}">Löschen</button>
-//    </div>`).join("") + `</div>`;
-//  document.querySelectorAll(".delete-future").forEach(b => b.addEventListener("click", async () => {
-//    await api(`/api/futures/${encodeURIComponent(b.dataset.id)}`, {method:"DELETE"}); await loadDashboard();
-//  }));
-//}
 
 function renderFutures() {
   const host = $("futureBlock");
@@ -513,8 +500,10 @@ $("profileSelect").addEventListener("change", async () => {
     editingFutureId = null;
     resetCreditForm();
     resetFutureForm();
-    await loadDashboard();
-    notice("Profil gewechselt.");
+    clearDashboardView();
+    clearProfileSettingsView();
+    const loaded = await loadDashboard();
+    if (loaded) notice("Profil gewechselt.");
   } catch (e) { notice(e.message, true); await loadProfiles(); }
 });
 
@@ -600,8 +589,16 @@ $("deleteProfileBtn").addEventListener("click", async () => {
   } catch (e) { notice(e.message, true); }
 });
 
+function clearProfileSettingsView() {
+  $("monthlyNeed").value = "";
+  $("targetMonths").value = "";
+  $("pot2Multiplier").value = "";
+  $("firefishBorrowPercent").value = "";
+  $("firefishTargetLtv").value = "";
+}
+
 function clearDashboardView() {
-  ["bucket1","bucket2","bucket3","futureBlock","credits","holdingsTable"].forEach(id => {
+  ["bucket1","bucket2","bucket3","futureBlock","credits","holdingsTable","targetModel1","targetModel2","targetModel3"].forEach(id => {
     const el = $(id);
     if (el) el.innerHTML = "";
   });
@@ -626,6 +623,7 @@ function clearDashboardView() {
 function showParqetDisconnected(message = "Parqet-Verbindung getrennt. Bitte neu verbinden.") {
   dashboard = null;
   clearDashboardView();
+  clearProfileSettingsView();
   $("disconnectBtn").classList.add("hidden");
   $("connectBtn").textContent = "Mit Parqet verbinden";
   $("parqetConnectionStatus").classList.remove("connected");
@@ -642,25 +640,61 @@ async function loadDashboard() {
     if (dashboard.needsPortfolio) {
       clearDashboardView();
       await loadPortfolios();
-      return;
+      return false;
     }
-    currency = dashboard.currency || "EUR";
-    $("portfolioPicker").classList.add("hidden");
-    populateCreditPortfolios(); updateCreditForm();
-    $("firefishBorrowPercent").value = dashboard.settings?.firefishBorrowPercent ?? "";
-    $("firefishTargetLtv").value = dashboard.settings?.firefishTargetLtv ?? 30;
-    $("monthlyNeed").value = dashboard.settings?.monthlyNeed || "";
-    $("targetMonths").value = dashboard.settings?.targetMonths || "";
-    $("pot2Multiplier").value = dashboard.settings?.pot2Multiplier ?? 2;
-    renderDataFreshness(); renderOverview(); renderBucket(1); renderBucket(2); renderBucket(3); renderTargetModels(); renderFutures(); renderCredits(); renderHoldings();
+
+    renderLoadedDashboard();
+    return true;
   } catch (e) {
     if (e.code === "PARQET_RECONNECT_REQUIRED" || e.status === 401) {
       showParqetDisconnected("Die Parqet-Autorisierung ist abgelaufen oder wurde widerrufen. Bitte Parqet neu verbinden.");
-      return;
+      return false;
     }
+
+    if (e.status === 403) {
+      dashboard = await api(`/api/dashboard?local=1&_=${Date.now()}`);
+      renderLoadedDashboard();
+
+      notice(
+        "Für dieses Profil sind aktuell nicht alle benötigten Parqet-Portfolios freigegeben. " +
+        "Parqet-Istdaten werden deshalb nicht angezeigt; lokale Planungsdaten bleiben verfügbar. " +
+        "Bitte Parqet neu verbinden oder die Portfolio-Zuordnung des Profils anpassen.",
+        true
+      );
+      return false;
+    }
+    dashboard = null;
+    clearDashboardView();
+    clearProfileSettingsView();
     notice(e.message, true);
+    return false;
   }
 }
+
+function renderLoadedDashboard() {
+  currency = dashboard.currency || "EUR";
+  $("portfolioPicker").classList.add("hidden");
+
+  populateCreditPortfolios();
+  updateCreditForm();
+
+  $("firefishBorrowPercent").value = dashboard.settings?.firefishBorrowPercent ?? "";
+  $("firefishTargetLtv").value = dashboard.settings?.firefishTargetLtv ?? 30;
+  $("monthlyNeed").value = dashboard.settings?.monthlyNeed || "";
+  $("targetMonths").value = dashboard.settings?.targetMonths || "";
+  $("pot2Multiplier").value = dashboard.settings?.pot2Multiplier ?? 2;
+
+  renderDataFreshness();
+  renderOverview();
+  renderBucket(1);
+  renderBucket(2);
+  renderBucket(3);
+  renderTargetModels();
+  renderFutures();
+  renderCredits();
+  renderHoldings();
+}
+
 function showFirstRunWelcome(show) {
   $("firstRunWelcome").classList.toggle("hidden", !show);
   $("appHeader").classList.toggle("hidden", show);
@@ -757,7 +791,7 @@ $("disconnectBtn").addEventListener("click", async () => {
     notice(e.message, true);
   }
 });
-//$("refreshBtn").addEventListener("click", loadDashboard);
+
 
 $("refreshBtn").addEventListener("click", async () => {
   const button = $("refreshBtn");
@@ -801,16 +835,6 @@ $("selectPortfolioBtn").addEventListener("click", async () => {
   await loadDashboard();
 });
 
-//$("addFutureBtn").addEventListener("click", async () => {
-//  try {
-//    await api("/api/futures", {method:"POST", body:JSON.stringify({
-//      name:$("futureName").value, equity:$("futureEquity").value, exposure:$("futureExposure").value,
-//      pnl:$("futurePnl").value, note:$("futureNote").value
-//    })});
-//    ["futureName","futureEquity","futureLeverage","futurePnl","futureNote"].forEach(id => $(id).value="");
-//    await loadDashboard();
-//  } catch(e) { notice(e.message,true); }
-//});
 
 $("addFutureBtn").addEventListener("click", async () => {
 
