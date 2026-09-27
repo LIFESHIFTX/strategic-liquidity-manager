@@ -137,6 +137,38 @@ Zum Beenden in SLM **Verwaltung → Anwendung beenden** wählen. Danach kann die
 
 Alternativ steht für Linux eine portable `.tar.gz`-Distribution zur Verfügung.
 
+### macOS – Ausführung aus dem Quellcode
+
+Für macOS steht derzeit keine fertige Distribution zur Verfügung. SLM kann jedoch mit einer aktuellen Node.js-LTS-Version und npm direkt aus dem Quellcode gestartet werden.
+
+> **Hinweis:** Dieser Installationsweg wurde mangels eigener macOS-Testumgebung noch nicht unter macOS verifiziert. Der hier beschriebene Source-Installationsweg wurde unter Linux erfolgreich getestet, einschließlich der Parqet-Autorisierung.
+
+Repository klonen und Abhängigkeiten installieren:
+
+```bash
+git clone https://github.com/LIFESHIFTX/strategic-liquidity-manager.git
+cd strategic-liquidity-manager
+npm ci
+```
+
+Parqet-Konfiguration erzeugen:
+
+```bash
+PARQET_RELEASE_CLIENT_ID="DEINE_PARQET_CLIENT_ID" npm run build:release-config
+```
+
+SLM starten:
+
+```bash
+node server.js
+```
+
+Anschließend SLM im Browser unter `http://localhost:1337` öffnen.
+
+Beim ersten Start **Mit Parqet verbinden** auswählen, bei Parqet anmelden und die gewünschten Portfolios für SLM freigeben.
+
+Für den Test durch das Parqet-Team wird die Client-ID der öffentlichen Strategic-Liquidity-Manager-Integration separat bereitgestellt.
+
 ## Erste Einrichtung
 
 Nach der Installation:
