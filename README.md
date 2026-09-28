@@ -141,6 +141,8 @@ Alternativ steht für Linux eine portable `.tar.gz`-Distribution zur Verfügung.
 
 Für macOS steht derzeit keine fertige Distribution zur Verfügung. SLM kann jedoch mit einer aktuellen Node.js-LTS-Version und npm direkt aus dem Quellcode gestartet werden.
 
+Falls Node.js noch nicht installiert ist, kann die aktuelle LTS-Version über die [offizielle Node.js-Downloadseite](https://nodejs.org/en/download) installiert werden.
+
 > **Hinweis:** Dieser Installationsweg wurde mangels eigener macOS-Testumgebung noch nicht unter macOS verifiziert. Der hier beschriebene Source-Installationsweg wurde unter Linux erfolgreich getestet, einschließlich der Parqet-Autorisierung.
 
 Repository klonen und Abhängigkeiten installieren:
