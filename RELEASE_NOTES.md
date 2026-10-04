@@ -1,5 +1,38 @@
 # Release Notes
 
+## v1.5.0
+
+### Dashboard und Reichweite
+
+- Gesamtreichweite über Topf 1 bis 3 auf Basis des persönlichen monatlichen Liquiditätsbedarfs
+- Anzeige der Gesamtreichweite in Monaten und Jahren
+- freie Kreditliquidität kann optional in die Gesamtreichweite einbezogen werden
+- Kreditliquidität bleibt standardmäßig unberücksichtigt
+
+### Übersicht Topf 1
+
+- Gruppierung der Positionen nach Assetklasse
+- separate Darstellung von Krypto, Wertpapieren, Rohstoffen, Cash und sonstigen Positionen
+- Anzeige der jeweiligen Gruppensumme
+- unbekannte Assettypen werden automatisch unter „Sonstige“ eingeordnet
+
+### Update-Hinweis
+
+- automatische Erkennung neuer SLM-Releases auf GitHub
+- installierte Version wird direkt aus der Anwendungsversion ermittelt
+- Hinweis auf eine neuere Version direkt im Header
+- direkter Link zum verfügbaren GitHub-Release
+- Update-Prüfung mit lokalem Cache und Timeout; die Nutzung von SLM bleibt bei nicht erreichbarem GitHub unbeeinträchtigt
+
+### Wartung und Konsistenz
+
+- veraltete interne und sichtbare „Risk Pots“-Bezeichnungen auf „Strategic Liquidity Manager“ vereinheitlicht
+- npm-Paketname auf `strategic-liquidity-manager` vereinheitlicht
+- portabler Windows-Buildpfad ohne benutzerspezifisches Verzeichnis
+- deutsche Benutzertexte und Konsolenausgaben weiter vereinheitlicht
+- bestehendes Backup-Format bleibt aus Kompatibilitätsgründen unverändert
+- Installationsdokumentation aktualisiert und erfolgreicher Source-Installationsweg unter macOS und Linux dokumentiert
+
 ## v1.4.2
 
 ### Bugfixes

@@ -53,9 +53,11 @@ Aus dem persönlichen monatlichen Liquiditätsbedarf berechnet SLM unter anderem
 - Ist- und Sollwerte für Topf 2 und Topf 3
 - Deckungsgrade
 - Fehlbetrag bzw. Überschuss
-- Reichweite in Monaten
+- Reichweite der einzelnen Töpfe in Monaten
 - Zielreichweite
 - Reichweite von Topf 1 bei Liquidierung zum heutigen Marktwert
+- Gesamtreichweite von Topf 1 bis 3 in Monaten und Jahren
+- optionale Einbeziehung freier Kreditliquidität in die Gesamtreichweite
 
 So wird aus einer reinen Vermögensübersicht ein strategisches Liquiditätsmodell.
 
@@ -68,6 +70,7 @@ So wird aus einer reinen Vermögensübersicht ein strategisches Liquiditätsmode
 - mehrere Parqet-Portfolios pro Profil
 - mehrere lokale Profile
 - Zuordnung von Parqet-Positionen zu Topf 1, 2 oder 3
+- Gruppierung der Positionen in Topf 1 nach Assetklasse
 - manuelle Futures inklusive Exposure und P&L
 - manuell gepflegte Kreditlinien und Kredite
 - Unterstützung Bitcoin-besicherter Kredite
@@ -76,6 +79,7 @@ So wird aus einer reinen Vermögensübersicht ein strategisches Liquiditätsmode
 - strategisches Liquiditäts-Zielmodell
 - Reichweite in Monaten und Jahren
 - Backup und Wiederherstellung der lokalen Konfiguration
+- Hinweis auf verfügbare neue SLM-Versionen mit direktem Link zum GitHub-Release
 - lokale Datenspeicherung ohne eigenen SLM-Cloud-Dienst
 - kontrolliertes Beenden der Anwendung
 - Distribution für Windows x64 und Linux x64
