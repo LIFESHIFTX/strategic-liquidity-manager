@@ -57,6 +57,46 @@ function positionHtml(h) {
 function escapeHtml(s) {
   return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 }
+
+const ASSET_TYPE_GROUPS = [
+  { type: "crypto", label: "Krypto" },
+  { type: "security", label: "Wertpapiere" },
+  { type: "commodity", label: "Rohstoffe" },
+  { type: "cash", label: "Cash" },
+  { type: "custom", label: "Sonstige" }
+];
+
+function renderGroupedBucket(items) {
+  const knownTypes = new Set(ASSET_TYPE_GROUPS.map(group => group.type));
+  const groups = ASSET_TYPE_GROUPS.map(group => ({
+    ...group,
+    items: items.filter(h => h.type === group.type)
+  }));
+
+  const unknownItems = items.filter(h => !knownTypes.has(h.type));
+  if (unknownItems.length) {
+    groups.push({ type: "unknown", label: "Sonstige", items: unknownItems });
+  }
+
+  return groups
+    .filter(group => group.items.length)
+    .map(group => {
+      const total = group.items.reduce(
+        (sum, h) => sum + Number(h.currentValue || 0),
+        0
+      );
+
+      return `<div class="asset-group">
+        <div class="asset-group-head">
+          <span>${escapeHtml(group.label)}</span>
+          <strong>${money(total)}</strong>
+        </div>
+        ${group.items.map(positionHtml).join("")}
+      </div>`;
+    })
+    .join("");
+}
+
 function renderBucket(n) {
   const items = dashboard.holdings
     .filter(h => Number(h.bucket) === n)
@@ -64,7 +104,9 @@ function renderBucket(n) {
 
   const el = $(`bucket${n}`);
   el.classList.toggle("empty", items.length === 0);
-  el.innerHTML = items.length ? items.map(positionHtml).join("") : "Keine Positionen zugeordnet";
+  el.innerHTML = items.length
+  ? (n === 1 ? renderGroupedBucket(items) : items.map(positionHtml).join(""))
+  : "Keine Positionen zugeordnet";
   $(`total${n}`).textContent = money(dashboard.totals.buckets[String(n)]);
 }
 function renderTargetModels() {

@@ -815,3 +815,26 @@ footer{flex-direction:column}
     flex-wrap:wrap;
   }
 }
+/* v1.5.0 — Assetklassen in Topf 1 */
+.asset-group + .asset-group{
+  margin-top:14px;
+}
+
+.asset-group-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:5px 0 6px;
+  border-bottom:1px solid rgba(148,163,184,.18);
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.asset-group-head strong{
+  font-size:11px;
+  color:var(--muted);
+}
