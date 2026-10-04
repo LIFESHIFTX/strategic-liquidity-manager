@@ -1012,7 +1012,7 @@ $("exportConfigBtn").addEventListener("click", async () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `parqet-risk-pots-backup-${stamp}.json`;
+    link.download = `strategic-liquidity-manager-backup-${stamp}.json`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -1034,7 +1034,7 @@ $("importConfigFile").addEventListener("change", async () => {
   try {
     const backup = JSON.parse(await file.text());
     if (backup?.format !== "parqet-risk-pots-backup" || backup?.version !== 1 || !backup?.data) {
-      throw new Error("Die Datei ist kein unterstütztes Risk-Pots-Backup.");
+      throw new Error("Die Datei ist keine unterstützte SLM-Datensicherung.");
     }
     const assignments = Object.keys(backup.data.assignments || {}).length;
     const futures = Array.isArray(backup.data.futures) ? backup.data.futures.length : 0;
@@ -1042,7 +1042,7 @@ $("importConfigFile").addEventListener("change", async () => {
     const exportedAt = backup.exportedAt ? new Date(backup.exportedAt).toLocaleString("de-DE") : "unbekannt";
 
     const ok = window.confirm(
-      `Risk-Pots-Konfiguration wiederherstellen?\n\n` +
+      `SLM-Konfiguration wiederherstellen?\n\n` +
       `Backup vom: ${exportedAt}\n` +
       `Zuordnungen: ${assignments}\nFutures: ${futures}\nKredite: ${credits}\n\n` +
       `Die aktuelle lokale Konfiguration wird vollständig ersetzt. OAuth-Tokens bleiben unverändert.`

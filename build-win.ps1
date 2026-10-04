@@ -2,8 +2,8 @@
 
 $ErrorActionPreference = "Stop"
 
-# Projektverzeichnis
-Set-Location "C:\Users\familie\Documents\parqet-risk-pots-windows-build"
+# Projektverzeichnis = Verzeichnis dieses Build-Skripts
+Set-Location $PSScriptRoot
 
 # Echte Parqet Client-ID
 $env:PARQET_RELEASE_CLIENT_ID = "019feb6a-1542-7228-a850-5a27174d1d7e"

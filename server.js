@@ -149,9 +149,9 @@ async function migrateLegacyData() {
 
   for (const [name, result] of Object.entries(results)) {
     if (result === "migrated") {
-      console.log(`Migrated legacy user data: ${name}.json -> ${DATA_DIR}`);
+      console.log(`Alte Benutzerdaten migriert: ${name}.json -> ${DATA_DIR}`);
     } else if (result === "target-exists") {
-      console.log(`Migration skipped: ${name}.json already contains user data.`);
+      console.log(`Migration übersprungen: ${name}.json enthält bereits Benutzerdaten.`);
     }
   }
 }
@@ -1174,7 +1174,7 @@ app.delete("/api/credits/:id", async (req, res) => {
 
 function validateBackupPayload(payload) {
   if (!payload || payload.format !== "parqet-risk-pots-backup" || payload.version !== 1) {
-    throw new Error("Ungültiges oder nicht unterstütztes Risk-Pots-Backup.");
+    throw new Error("Ungültige oder nicht unterstützte SLM-Datensicherung.");
   }
   const data = payload.data;
   if (!data || typeof data !== "object" || Array.isArray(data)) {
@@ -1373,7 +1373,7 @@ app.use((err, _req, res, _next) => {
 
 await migrateLegacyData();
 httpServer = app.listen(PORT, "127.0.0.1", () => {
-  console.log(`Parqet Risk Pots läuft auf ${BASE_URL}`);
-  console.log(`User data: ${DATA_DIR}`);
+  console.log(`Strategic Liquidity Manager läuft auf ${BASE_URL}`);
+  console.log(`Benutzerdaten: ${DATA_DIR}`);
   console.log(`OAuth Redirect URI: ${REDIRECT_URI}`);
 });

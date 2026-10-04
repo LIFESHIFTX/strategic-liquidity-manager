@@ -75,7 +75,7 @@ So wird aus einer reinen Vermögensübersicht ein strategisches Liquiditätsmode
 - Darstellung verfügbarer Kreditliquidität
 - strategisches Liquiditäts-Zielmodell
 - Reichweite in Monaten und Jahren
-- Backup und Restore der lokalen Konfiguration
+- Backup und Wiederherstellung der lokalen Konfiguration
 - lokale Datenspeicherung ohne eigenen SLM-Cloud-Dienst
 - kontrolliertes Beenden der Anwendung
 - Distribution für Windows x64 und Linux x64
@@ -126,8 +126,9 @@ Für Debian-basierte Systeme ist das `.deb` der einfachste Installationsweg.
 2. Das Paket installieren, zum Beispiel:
 
 ```bash
-sudo apt install ./parqet-strategic-liquidity-manager_1.4.1_amd64.deb
+sudo apt install ./parqet-strategic-liquidity-manager_VERSION_amd64.deb
 ```
+VERSION durch die Versionsnummer der heruntergeladenen Datei ersetzen.
 
 3. **Strategic Liquidity Manager** aus dem Anwendungsmenü starten.
 4. **Mit Parqet verbinden** auswählen.
@@ -196,7 +197,7 @@ Nach der Installation:
 
 *Zuordnung von Parqet-Positionen sowie lokale Verwaltung von Futures und Krediten.*
 
-## Backup und Restore
+## Backup und Wiederherstellung
 
 Über den Verwaltungsbereich kann die lokale SLM-Konfiguration als JSON-Datei exportiert und später wiederhergestellt werden.
 
