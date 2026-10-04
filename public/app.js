@@ -100,6 +100,21 @@ function renderOverview() {
   const assigned = Number(dashboard.totals.assignedAssets || 0);
   $("assignedAssets").textContent = money(assigned);
   $("freeCreditLiquidity").textContent = money(dashboard.totals.freeCreditLiquidity);
+  const monthlyNeed = Number(dashboard?.targetModel?.monthlyNeed || 0);
+  const includeCredit = $("includeCreditLiquidity")?.checked === true;
+  const creditLiquidity = Number(dashboard.totals.freeCreditLiquidity || 0);
+  const coverageBase = assigned + (includeCredit ? creditLiquidity : 0);
+
+  if ($("totalCoverage")) {
+    if (monthlyNeed > 0) {
+      const months = coverageBase / monthlyNeed;
+      const years = months / 12;
+      $("totalCoverage").textContent =
+        `${num(months, 1)} Monate · ${num(years, 1)} Jahre`;
+    } else {
+      $("totalCoverage").textContent = "–";
+    }
+  }
 
   [1, 2, 3].forEach(n => {
     const value = Number(dashboard.totals.buckets[String(n)] || 0);
@@ -109,6 +124,10 @@ function renderOverview() {
     $(`allocation${n}`).title = `Topf ${n}: ${num(share, 1)} %`;
   });
 }
+
+$("includeCreditLiquidity")?.addEventListener("change", () => {
+  if (dashboard) renderOverview();
+});
 
 function renderFutures() {
   const host = $("futureBlock");
@@ -602,10 +621,11 @@ function clearDashboardView() {
     const el = $(id);
     if (el) el.innerHTML = "";
   });
-  ["total1","total2","total3","assignedAssets","freeCreditLiquidity","creditUsed"].forEach(id => {
+  ["total1","total2","total3","assignedAssets","freeCreditLiquidity","creditUsed","totalCoverage"].forEach(id => {
     const el = $(id);
     if (el) el.textContent = "–";
   });
+  if ($("includeCreditLiquidity")) $("includeCreditLiquidity").checked = false;
   ["share1","share2","share3"].forEach(id => {
     const el = $(id);
     if (el) el.textContent = "–";

@@ -762,3 +762,56 @@ footer{flex-direction:column}
   overflow:auto;
   scrollbar-gutter:stable;
 }
+
+/* v1.5.0 — Gesamtreichweite */
+.total-coverage{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:-4px 0 10px;
+  padding:8px 12px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  background:rgba(255,255,255,.05);
+}
+
+.total-coverage > div{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+
+.total-coverage > div > span{
+  color:#cbd5e1;
+  font-size:12px;
+}
+
+.total-coverage > div > strong{
+  font-size:15px;
+}
+
+.coverage-credit-toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#cbd5e1;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.coverage-credit-toggle input{
+  width:auto;
+  margin:0;
+}
+
+@media(max-width:760px){
+  .total-coverage{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .total-coverage > div{
+    flex-wrap:wrap;
+  }
+}
