@@ -20,7 +20,7 @@ Das Modell ist jedoch **nicht auf Bitcoin beschränkt**. Die drei Töpfe können
 
 ## Download
 
-**Aktuelle Version: v1.4.2**
+**Aktuelle Version: v1.5.0**
 
 Fertige Distributionen stehen für **Windows x64** und **Linux x64** zur Verfügung:
 

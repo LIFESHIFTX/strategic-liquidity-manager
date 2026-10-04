@@ -1,6 +1,6 @@
 {
   "name": "strategic-liquidity-manager",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "description": "Strategic liquidity and credit management for Parqet, including Bitcoin Buy-Borrow-Die planning.",
