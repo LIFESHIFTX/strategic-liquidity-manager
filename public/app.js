@@ -779,6 +779,18 @@ async function showFirstRunStage(connected) {
 async function init() {
   try {
     const status = await api("/api/status");
+    if ($("appVersion")) {
+      $("appVersion").textContent = status.version || "–";
+    }
+    const updateLink = $("updateAvailableLink");
+
+    if (updateLink && status.update?.available) {
+      updateLink.textContent = `Neue Version v${status.update.version} verfügbar ↗`;
+      updateLink.href = status.update.url;
+      updateLink.classList.remove("hidden");
+    } else if (updateLink) {
+      updateLink.classList.add("hidden");
+    }
     currency = status.currency || "EUR";
     $("connectBtn").textContent = status.connected ? "Parqet neu verbinden" : "Mit Parqet verbinden";
     $("disconnectBtn").classList.toggle("hidden", !status.connected);

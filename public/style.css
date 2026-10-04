@@ -690,8 +690,7 @@ footer{flex-direction:column}
 .mini-summary span{white-space:nowrap}
 
 .footer-disclaimer{display:flex;flex-direction:column;gap:2px}
-.footer-disclaimer span{display:block}
-
+.footer-disclaimer > span{display:block}
 .parqet-connection-actions{display:flex;gap:10px;flex-basis:100%;justify-content:flex-start}
 
 .connection-status{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid rgba(148,163,184,.28);border-radius:9px;background:#0b0e12;font-size:.78rem;font-weight:700;color:#94a3b8}
@@ -837,4 +836,21 @@ footer{flex-direction:column}
 .asset-group-head strong{
   font-size:11px;
   color:var(--muted);
+}
+/* v1.5.0 — Update-Hinweis im Header */
+.header-update-link{
+  align-self:center;
+  color:var(--btc);
+  font-size:13px;
+  font-weight:800;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.header-update-link:hover{
+  text-decoration:underline;
+}
+
+.footer-version{
+  white-space:nowrap;
 }

@@ -8,6 +8,10 @@ import { getConfig } from "./config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+const packageJson = JSON.parse(
+  await fs.readFile(path.join(__dirname, "package.json"), "utf8")
+);
+const APP_VERSION = String(packageJson.version || "").trim();
 
 const CONFIG = getConfig();
 const PORT = CONFIG.port;
@@ -18,6 +22,15 @@ const ISSUER = "https://connect.parqet.com";
 const AUTHORIZE_URL = `${ISSUER}/oauth2/authorize`;
 const TOKEN_URL = `${ISSUER}/oauth2/token`;
 const REDIRECT_URI = `${BASE_URL}/oauth/callback`;
+const GITHUB_LATEST_RELEASE_URL =
+  "https://api.github.com/repos/LIFESHIFTX/strategic-liquidity-manager/releases/latest";
+
+const UPDATE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+
+let updateCache = {
+  checkedAt: 0,
+  result: null
+};
 
 function resolveUserDataDir() {
   if (CONFIG.appDataDir) return path.resolve(CONFIG.appDataDir);
@@ -415,11 +428,76 @@ function futureToEur(value, inputCurrency, fx) {
   return null;
 }
 
+function parseVersion(value) {
+  const match = String(value || "").trim().match(/^v?(\d+)\.(\d+)\.(\d+)$/);
+  if (!match) return null;
+  return match.slice(1).map(Number);
+}
+
+function isNewerVersion(latest, current) {
+  const a = parseVersion(latest);
+  const b = parseVersion(current);
+  if (!a || !b) return false;
+
+  for (let i = 0; i < 3; i++) {
+    if (a[i] > b[i]) return true;
+    if (a[i] < b[i]) return false;
+  }
+  return false;
+}
+
+async function getUpdateInfo() {
+  const now = Date.now();
+
+  if (now - updateCache.checkedAt < UPDATE_CACHE_TTL_MS) {
+    return updateCache.result;
+  }
+
+  try {
+    const response = await fetch(GITHUB_LATEST_RELEASE_URL, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        "User-Agent": "Strategic-Liquidity-Manager"
+      },
+      signal: AbortSignal.timeout(3000)
+    });
+
+    if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);
+
+    const release = await response.json();
+    const latestVersion = String(release.tag_name || "").replace(/^v/, "");
+
+    const result = isNewerVersion(latestVersion, APP_VERSION)
+      ? {
+          available: true,
+          version: latestVersion,
+          url: release.html_url
+        }
+      : null;
+
+    updateCache = {
+      checkedAt: now,
+      result
+    };
+
+    return result;
+  } catch {
+    updateCache = {
+      checkedAt: now,
+      result: null
+    };
+    return null;
+  }
+}
+
 app.get("/api/status", async (_req, res) => {
+  const update = await getUpdateInfo();
   const tokens = await getTokens();
   const store = await getProfileStore();
   const state = store.profiles[store.activeProfileId];
   res.json({
+    version: APP_VERSION,
+    update,
     configured: Boolean(CLIENT_ID),
     connected: Boolean(tokens?.access_token),
     setupCompleted: store.setupCompleted !== false,

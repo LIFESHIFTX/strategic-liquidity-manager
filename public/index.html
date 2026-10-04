@@ -21,6 +21,11 @@
         <select id="profileSelect" aria-label="Aktives Profil"></select>
       </div>
       <button id="refreshBtn" class="secondary">Aktualisieren</button>
+      <a id="updateAvailableLink"
+        class="header-update-link hidden"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"></a>
       <div class="parqet-connection-actions">
         <span id="parqetConnectionStatus" class="connection-status disconnected">
           <span class="connection-dot" aria-hidden="true"></span>
@@ -362,7 +367,11 @@
     </div>
     <div class="footer-meta">
       <div class="footer-disclaimer">
-        <span><strong>Strategic Liquidity Manager · v1.4.2</strong></span>
+        <span>
+          <strong class="footer-version">
+            Strategic Liquidity Manager · v<span id="appVersion">–</span>
+          </strong>
+        </span>
         <span>© 2026 LIFESHIFTX LTD · GPL-3.0</span>
         <span>Parqet-Zugriff ausschließlich lesend · keine Orders · keine Änderungen am Parqet-Portfolio.</span>
         <span>Planungsdaten und OAuth-Tokens werden lokal gespeichert. Keine Anlage- oder Kreditberatung.</span>
