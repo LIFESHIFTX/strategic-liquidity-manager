@@ -150,6 +150,18 @@ Falls Node.js noch nicht installiert ist, kann die aktuelle LTS-Version über di
 
 > **Hinweis:** Der hier beschriebene Source-Installationsweg wurde unter macOS und Linux erfolgreich getestet, einschließlich der Parqet-Autorisierung.
 
+Prüfen, ob Git verfügbar ist:
+
+```bash
+git --version
+```
+
+Falls Git noch nicht installiert ist, können unter macOS die Xcode Command Line Tools installiert werden:
+
+```bash
+xcode-select --install
+```
+
 Repository klonen und Abhängigkeiten installieren:
 
 ```bash
