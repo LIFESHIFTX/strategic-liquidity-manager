@@ -12,6 +12,7 @@ try {
 } catch (err) {
   if (err?.code !== "ERR_MODULE_NOT_FOUND") throw err;
 }
+const DEFAULT_PARQET_CLIENT_ID = "019feb6a-1542-7228-a850-5a27174d1d7e";
 
 export function getConfig(env = process.env) {
   const port = Number(env.PORT || 1337);
@@ -21,8 +22,11 @@ export function getConfig(env = process.env) {
 
   const baseUrl = (env.BASE_URL || `http://localhost:${port}`).replace(/\/$/, "");
   const releaseClientId = String(releaseConfig.parqetClientId || "").trim();
-  const clientId = String(env.PARQET_CLIENT_ID || releaseClientId).trim();
-
+  const clientId = String(
+    env.PARQET_CLIENT_ID ||
+    releaseClientId ||
+    DEFAULT_PARQET_CLIENT_ID
+  ).trim();
   return Object.freeze({
     port,
     baseUrl,
