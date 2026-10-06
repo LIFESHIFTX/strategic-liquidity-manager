@@ -162,24 +162,13 @@ Falls Git noch nicht installiert ist, können unter macOS die Xcode Command Line
 xcode-select --install
 ```
 
-Repository klonen und Abhängigkeiten installieren:
+Repository klonen, Abhängigkeiten installieren und SLM starten:
 
 ```bash
 git clone https://github.com/LIFESHIFTX/strategic-liquidity-manager.git
 cd strategic-liquidity-manager
 npm ci
-```
-
-Parqet-Konfiguration erzeugen:
-
-```bash
-PARQET_RELEASE_CLIENT_ID="DEINE_PARQET_CLIENT_ID" npm run build:release-config
-```
-
-SLM starten:
-
-```bash
-node server.js
+npm start
 ```
 
 Anschließend SLM im Browser unter `http://localhost:1337` öffnen.
