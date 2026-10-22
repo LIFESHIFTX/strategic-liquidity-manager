@@ -175,8 +175,6 @@ Anschließend SLM im Browser unter `http://localhost:1337` öffnen.
 
 Beim ersten Start **Mit Parqet verbinden** auswählen, bei Parqet anmelden und die gewünschten Portfolios für SLM freigeben.
 
-Für den Test durch das Parqet-Team wird die Client-ID der öffentlichen Strategic-Liquidity-Manager-Integration separat bereitgestellt.
-
 ## Erste Einrichtung
 
 Nach der Installation:
@@ -262,6 +260,14 @@ http://localhost:1337
 ```
 
 **Wichtig:** `.env`, OAuth-Tokens, lokale Benutzerdaten und Backups gehören nicht ins Repository.
+
+## Weiterführende Informationen
+
+**[Freiheitskapital – Mit Bitcoin unabhängig und frei leben](https://freiheitskapital.substack.com/)**
+
+Freiheitskapital beleuchtet die strategischen Hintergründe des Bitcoin-basierten Liquiditätsmanagements. Im Mittelpunkt stehen Bitcoin-besicherte Kredite, Beleihungsquoten (LTV), Liquiditätsreserven, Risikomanagement und langfristige Finanzplanung.
+
+Der Beitrag **„Bitcoin beleihen, ohne die Kontrolle zu verlieren“** erläutert die Überlegungen hinter der Nutzung von Bitcoin als Kreditsicherheit und zeigt, wie der Strategic Liquidity Manager bei der praktischen Umsetzung unterstützt.
 
 ## Projekt unterstützen
 
